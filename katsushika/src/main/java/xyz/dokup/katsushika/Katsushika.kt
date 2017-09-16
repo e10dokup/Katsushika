@@ -4,12 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.ImageView
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
-import xyz.dokup.katsushika.api.ImageApi
-import xyz.dokup.katsushika.ext.await
 
 
 /**
@@ -33,12 +27,15 @@ class Katsushika private constructor(private val context: Context) {
     fun into(target: ImageView) {
         url ?: return
 
-        val job = launch(UI) {
-            val byteArray = async(CommonPool) { ImageApi().getImage(url).await().bytes() }.await()
-            val options = async(CommonPool) { getBitmapOptions(byteArray) }.await()
-            val bitmap = async(CommonPool) { getScaledBitmap(target, options, byteArray) }.await()
-            target.setImageBitmap(bitmap)
-        }
+//        val job = launch(UI) {
+//            val byteArray = async(CommonPool) { ImageApi().getImage(url).await().bytes() }.await()
+//            val options = async(CommonPool) { getBitmapOptions(byteArray) }.await()
+//            val bitmap = async(CommonPool) { getScaledBitmap(target, options, byteArray) }.await()
+//            target.setImageBitmap(bitmap)
+//        }
+
+
+
     }
 
     private fun getBitmapOptions(byteArray: ByteArray): BitmapFactory.Options {
