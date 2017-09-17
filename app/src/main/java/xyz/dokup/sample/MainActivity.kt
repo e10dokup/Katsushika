@@ -1,4 +1,4 @@
-package xyz.dokup.katsushika_sample
+package xyz.dokup.sample
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity

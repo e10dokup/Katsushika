@@ -1,4 +1,4 @@
-package xyz.dokup.katsushika_sample
+package xyz.dokup.sample
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import xyz.dokup.katsushika.Katsushika
+import xyz.dokup.katsushika.cache.DefaultCombinedCache
 
 /**
  * Created by e10dokup on 2017/09/17.
@@ -26,7 +27,7 @@ class ImageAdapter(
         holder ?: return
         val url = urls[position]
         val viewHolder = holder as ViewHolder
-        Katsushika.with(context).load(url).into(viewHolder.itemImage)
+        Katsushika.with(context).cache(DefaultCombinedCache(context)).load(url).into(viewHolder.itemImage)
     }
 
     override fun getItemCount(): Int {

@@ -1,4 +1,4 @@
-package xyz.dokup.katsushika_sample
+package xyz.dokup.sample
 
 import org.junit.Test
 

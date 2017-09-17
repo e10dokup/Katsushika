@@ -1,4 +1,4 @@
-package xyz.dokup.katsushika_sample
+package xyz.dokup.sample
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

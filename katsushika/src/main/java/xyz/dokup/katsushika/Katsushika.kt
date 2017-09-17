@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.ImageView
+import xyz.dokup.katsushika.cache.BitmapCache
+import xyz.dokup.katsushika.ext.md5
 
 
 /**
@@ -12,11 +14,17 @@ import android.widget.ImageView
 class Katsushika private constructor(private val context: Context) {
 
     private var url: String? = null
+    private var cache: BitmapCache? = null
 
     companion object {
         fun with(context: Context): Katsushika {
             return Katsushika(context)
         }
+    }
+
+    fun cache(cache: BitmapCache): Katsushika {
+        this.cache = cache
+        return this
     }
 
     fun load(url: String): Katsushika {
@@ -27,14 +35,18 @@ class Katsushika private constructor(private val context: Context) {
     fun into(target: ImageView) {
         url ?: return
 
-//        val job = launch(UI) {
-//            val byteArray = async(CommonPool) { ImageApi().getImage(url).await().bytes() }.await()
-//            val options = async(CommonPool) { getBitmapOptions(byteArray) }.await()
-//            val bitmap = async(CommonPool) { getScaledBitmap(target, options, byteArray) }.await()
-//            target.setImageBitmap(bitmap)
-//        }
-
-
+        val fetcher = BitmapFetcher()
+        fetcher.fetch(url!!, cache,
+            onFetchFromCache = {
+                target.setImageBitmap(it)
+            },
+            onFetchFromUrl = {
+                val options = getBitmapOptions(it)
+                val bitmap = getScaledBitmap(target, options, it)
+                target.setImageBitmap(bitmap)
+                cache?.putBitmap(url!!.md5(), bitmap)
+            }
+        )
 
     }
 

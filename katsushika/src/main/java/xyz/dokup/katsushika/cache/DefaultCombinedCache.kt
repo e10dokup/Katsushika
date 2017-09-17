@@ -6,7 +6,7 @@ import android.graphics.Bitmap
 /**
  * Created by e10dokup on 2017/09/07.
  */
-class DefaultCombimedCache (
+class DefaultCombinedCache (
         context: Context
 ): BitmapCache {
 
