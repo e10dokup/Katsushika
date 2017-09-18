@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 /**
  * Created by e10dokup on 2017/09/18.
  */
-interface BitmapScaler {
+interface BitmapScalar {
 
-    fun scaleBitmap(): Bitmap
+    suspend fun scaleBitmap(byteArray: ByteArray): Bitmap
 }

@@ -1,10 +1,14 @@
 package xyz.dokup.katsushika
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.widget.ImageView
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import xyz.dokup.katsushika.cache.BitmapCache
-import xyz.dokup.katsushika.ext.md5
+import xyz.dokup.katsushika.scaler.BitmapScalar
+import xyz.dokup.katsushika.scaler.NopScalar
 
 
 /**
@@ -14,6 +18,7 @@ class Katsushika private constructor(private val context: Context) {
 
     private var url: String? = null
     private var cache: BitmapCache? = null
+    private var scalar: BitmapScalar = NopScalar()
 
     companion object {
         fun with(context: Context): Katsushika {
@@ -31,20 +36,20 @@ class Katsushika private constructor(private val context: Context) {
         return this
     }
 
+    fun scale(scalar: BitmapScalar): Katsushika {
+        this.scalar = scalar
+        return this
+    }
+
     fun into(target: ImageView) {
         url ?: return
 
         val fetcher = BitmapFetcher()
-        fetcher.fetch(url!!, cache,
-            onFetchFromCache = {
-                target.setImageBitmap(it)
-            },
-            onFetchFromUrl = {
-                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
-                target.setImageBitmap(bitmap)
-                cache?.putBitmap(url!!.md5(), bitmap)
-            }
-        )
+
+        launch(UI) {
+            val bitmap = async(CommonPool) { fetcher.fetch(url!!, cache, scalar) }.await()
+            target.setImageBitmap(bitmap)
+        }
 
     }
 }

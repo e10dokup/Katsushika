@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import xyz.dokup.katsushika.Katsushika
 import xyz.dokup.katsushika.cache.DefaultCombinedCache
+import xyz.dokup.katsushika.scaler.AdjustScalar
 
 /**
  * Created by e10dokup on 2017/09/17.
@@ -27,7 +28,11 @@ class ImageAdapter(
         holder ?: return
         val url = urls[position]
         val viewHolder = holder as ViewHolder
-        Katsushika.with(context).cache(DefaultCombinedCache(context)).load(url).into(viewHolder.itemImage)
+        Katsushika.with(context)
+                .cache(DefaultCombinedCache(context))
+                .load(url)
+                .scale(AdjustScalar(viewHolder.itemImage))
+                .into(viewHolder.itemImage)
     }
 
     override fun getItemCount(): Int {
