@@ -30,7 +30,6 @@ class DefaultDiskCache(
     }
 
     override fun putBitmap(key: String, bitmap: Bitmap) {
-        getBitmap(key) ?: return
         val editor = diskCache.edit(key.md5())
         editor ?: return
         if (writeBitmapToFile(bitmap, editor)) {

@@ -24,9 +24,11 @@ internal class BitmapFetcher {
             if (cached != null) {
                 continuation.resume(cached)
             } else {
-                val job = launch(UI) {
+                launch(UI) {
                     val byteArray = async(CommonPool) {ImageApi().getImage(url).await().bytes()}.await()
-                    continuation.resume(scalar.scaleBitmap(byteArray))
+                    val bitmap = scalar.scaleBitmap(byteArray)
+                    cache?.putBitmap(url, bitmap)
+                    continuation.resume(bitmap)
                 }
             }
         }

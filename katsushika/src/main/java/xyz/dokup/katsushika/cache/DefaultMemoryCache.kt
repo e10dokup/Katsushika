@@ -23,7 +23,6 @@ class DefaultMemoryCache : BitmapCache {
     }
 
     override fun putBitmap(key: String, bitmap: Bitmap) {
-        getBitmap(key) ?: return
         memoryCache.put(key, bitmap)
     }
 
