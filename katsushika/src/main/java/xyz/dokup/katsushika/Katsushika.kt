@@ -10,6 +10,7 @@ import xyz.dokup.katsushika.fetcher.BitmapFetcher
 import xyz.dokup.katsushika.fetcher.OkHttpBitmapFetcher
 import xyz.dokup.katsushika.scaler.BitmapScalar
 import xyz.dokup.katsushika.scaler.NopScalar
+import xyz.dokup.katsushika.transformer.BitmapTransformer
 
 
 /**
@@ -21,6 +22,8 @@ class Katsushika private constructor(private val context: Context) {
     private var cache: BitmapCache? = null
     private var fetcher: BitmapFetcher = OkHttpBitmapFetcher()
     private var scalar: BitmapScalar = NopScalar()
+
+    private val transformers = ArrayList<BitmapTransformer>()
 
     companion object {
         fun with(context: Context): Katsushika {
@@ -43,11 +46,21 @@ class Katsushika private constructor(private val context: Context) {
         return this
     }
 
+    fun transform(transformer: BitmapTransformer): Katsushika {
+        this.transformers.add(transformer)
+        return this
+    }
+
     fun into(target: ImageView) {
         url ?: return
 
         launch(UI) {
-            val bitmap = async{ fetcher.fetch(url!!, cache, scalar) }.await()
+            var bitmap = async { fetcher.fetch(url!!, cache, scalar) }.await()
+
+            for(transformer in transformers) {
+                bitmap = async { transformer.transform(bitmap) }.await()
+            }
+
             target.setImageBitmap(bitmap)
         }
 

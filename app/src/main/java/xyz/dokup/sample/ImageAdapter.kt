@@ -9,6 +9,7 @@ import android.widget.ImageView
 import xyz.dokup.katsushika.Katsushika
 import xyz.dokup.katsushika.cache.DefaultCombinedCache
 import xyz.dokup.katsushika.scaler.AdjustScalar
+import xyz.dokup.katsushika.transformer.RoundCornerTransformer
 
 /**
  * Created by e10dokup on 2017/09/17.
@@ -32,6 +33,7 @@ class ImageAdapter(
                 .cache(DefaultCombinedCache(context))
                 .load(url)
                 .scale(AdjustScalar(viewHolder.itemImage))
+                .transform(RoundCornerTransformer())
                 .into(viewHolder.itemImage)
     }
 

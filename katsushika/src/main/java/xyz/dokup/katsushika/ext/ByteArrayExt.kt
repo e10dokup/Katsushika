@@ -2,6 +2,7 @@ package xyz.dokup.katsushika.ext
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.widget.ImageView
 
 /**
@@ -15,6 +16,7 @@ fun ByteArray.getBitmapOptions(): BitmapFactory.Options {
 }
 
 fun ByteArray.getScaledBitmap(target: ImageView, options: BitmapFactory.Options): Bitmap {
+    Log.d("hoge", target.width.toString())
     val widthScale = options.outWidth/target.width
     val bitmap : Bitmap
     if (widthScale > 2) {

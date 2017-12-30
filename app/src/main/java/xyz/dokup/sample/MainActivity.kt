@@ -27,8 +27,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun createImageList() {
         for (i in 1 .. 100) {
-            val width = Random().nextInt(1200) + 1
-            val height = Random().nextInt(1200) + 1
+            val width = 300
+            val height = 300
             val url = "http://placehold.jp/%dx%d.png".format(width, height)
             urls.add(url)
         }
