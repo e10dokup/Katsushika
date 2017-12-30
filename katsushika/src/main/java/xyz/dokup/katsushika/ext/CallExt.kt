@@ -10,7 +10,7 @@ import java.io.IOException
 /**
  * Created by e10dokup on 2017/09/06.
  */
-suspend fun Call.await(): ResponseBody {
+suspend fun Call.start(): ResponseBody {
     return suspendCancellableCoroutine { continuation ->
         enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {

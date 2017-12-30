@@ -2,11 +2,12 @@ package xyz.dokup.katsushika
 
 import android.content.Context
 import android.widget.ImageView
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import xyz.dokup.katsushika.cache.BitmapCache
+import xyz.dokup.katsushika.fetcher.BitmapFetcher
+import xyz.dokup.katsushika.fetcher.OkHttpBitmapFetcher
 import xyz.dokup.katsushika.scaler.BitmapScalar
 import xyz.dokup.katsushika.scaler.NopScalar
 
@@ -18,6 +19,7 @@ class Katsushika private constructor(private val context: Context) {
 
     private var url: String? = null
     private var cache: BitmapCache? = null
+    private var fetcher: BitmapFetcher = OkHttpBitmapFetcher()
     private var scalar: BitmapScalar = NopScalar()
 
     companion object {
@@ -44,10 +46,8 @@ class Katsushika private constructor(private val context: Context) {
     fun into(target: ImageView) {
         url ?: return
 
-        val fetcher = BitmapFetcher()
-
         launch(UI) {
-            val bitmap = async(CommonPool) { fetcher.fetch(url!!, cache, scalar) }.await()
+            val bitmap = async{ fetcher.fetch(url!!, cache, scalar) }.await()
             target.setImageBitmap(bitmap)
         }
 

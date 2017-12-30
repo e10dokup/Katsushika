@@ -20,8 +20,8 @@ class AdjustScalar constructor(
     override suspend fun scaleBitmap(byteArray: ByteArray): Bitmap {
         return suspendCancellableCoroutine { continuation ->
             launch(UI) {
-                val options = async(CommonPool) { byteArray.getBitmapOptions() }.await()
-                val bitmap = async(CommonPool) { byteArray.getScaledBitmap(target, options) }.await()
+                val options = async { byteArray.getBitmapOptions() }.await()
+                val bitmap = async { byteArray.getScaledBitmap(target, options) }.await()
                 continuation.resume(bitmap)
             }
         }
