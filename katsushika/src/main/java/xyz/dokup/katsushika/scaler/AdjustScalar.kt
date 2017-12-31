@@ -12,15 +12,22 @@ import xyz.dokup.katsushika.ext.getScaledBitmap
 /**
  * Created by e10dokup on 2017/09/18.
  */
-class AdjustScalar constructor(
-        private val target: ImageView
-): BitmapScalar {
+class AdjustScalar : BitmapScalar {
+
+    private val targetWidth: Int
+
+    constructor(target: ImageView) {
+        targetWidth = target.width
+    }
+    constructor(targetWidth: Int) {
+        this.targetWidth = targetWidth
+    }
 
     override suspend fun scaleBitmap(byteArray: ByteArray): Bitmap {
         return suspendCancellableCoroutine { continuation ->
             launch(UI) {
                 val options = async { byteArray.getBitmapOptions() }.await()
-                val bitmap = async { byteArray.getScaledBitmap(target.width, options) }.await()
+                val bitmap = async { byteArray.getScaledBitmap(targetWidth, options) }.await()
                 continuation.resume(bitmap)
             }
         }

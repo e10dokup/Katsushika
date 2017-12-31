@@ -41,7 +41,7 @@ class ByteArrayExtTest {
 
     @Test
     @Throws(Exception::class)
-    fun checkGetScaledBitmapWhenLargeEnoughView() {
+    fun checkGetScaledBitmapWhenLargeEnough() {
         val output = byteArray.getScaledBitmap(640, byteArray.getBitmapOptions())
         assertEquals(output.width, 480)
         assertEquals(output.height, 320)
@@ -49,7 +49,7 @@ class ByteArrayExtTest {
 
     @Test
     @Throws(Exception::class)
-    fun checkGetScaledBitmapWhenSmallView() {
+    fun checkGetScaledBitmapWhenSmall() {
         val output = byteArray.getScaledBitmap(120, byteArray.getBitmapOptions())
         assertEquals(output.width, 120)
         assertEquals(output.height, 80)
