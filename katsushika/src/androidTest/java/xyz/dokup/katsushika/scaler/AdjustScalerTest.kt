@@ -39,8 +39,8 @@ class AdjustScalerTest {
         scaler = AdjustScalar(600)
         launch {
             val output = async { scaler.scaleBitmap(byteArray) }.await()
-            assertEquals(output.width, bitmap.width)
-            assertEquals(output.height, bitmap.height)
+            assertEquals(480, output.width)
+            assertEquals(320, output.height)
         }
     }
 
@@ -50,8 +50,8 @@ class AdjustScalerTest {
         scaler = AdjustScalar(100)
         launch {
             val output = async { scaler.scaleBitmap(byteArray) }.await()
-            assertEquals(output.width, 120)
-            assertEquals(output.height, 80)
+            assertEquals(120, output.width)
+            assertEquals(80, output.height)
         }
     }
 

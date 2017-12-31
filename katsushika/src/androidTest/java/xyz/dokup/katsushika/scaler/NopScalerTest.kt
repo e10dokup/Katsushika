@@ -40,8 +40,8 @@ class NopScalerTest {
     fun checkDoNothing() {
         launch {
             val output = async { scaler.scaleBitmap(byteArray) }.await()
-            assertEquals(output.width, bitmap.width)
-            assertEquals(output.height, bitmap.height)
+            assertEquals(480, output.width)
+            assertEquals(320, output.height)
         }
     }
 
