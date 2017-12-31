@@ -34,6 +34,7 @@ jobs:
           command: |
             ./gradlew test
             ./gradlew lint test
+
       - run:
           name: Show list of system-images
           command: sdkmanager --list --verbose | grep system-images
@@ -57,25 +58,28 @@ jobs:
           name: Run Instrumentation test
           command: ./gradlew katsushika:connectedAndroidTest
 
-      - run:
-          name: Distribute Bintray
-          command: |
-            if [ $CIRCLE_BRANCH = "master" ]; then
-            sh ./deploy.sh
-            else
-              echo "Bintray distribution was skipped."
-            fi
-      - run:
-          name: Update version
-          command: |
-            if [ $CIRCLE_BRANCH = "master" ]; then
-              sh ./version.sh
-            else
-              echo "Version update was skipped."
-            fi
       - store_test_results:
           path: example/build/test-results
 
       - store_artifacts:
           path: example/build/reports
           destination: reports
+
+  deploy:
+    <<: *defaults
+      steps:
+        - run:
+            name: Distribute Bintray
+            command: ./gradlew bintrayUpload
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
