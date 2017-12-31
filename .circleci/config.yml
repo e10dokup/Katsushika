@@ -67,10 +67,10 @@ jobs:
 
   deploy:
     <<: *defaults
-      steps:
-        - run:
-            name: Distribute Bintray
-            command: ./gradlew bintrayUpload
+    steps:
+      - run:
+          name: Distribute Bintray
+          command: ./gradlew bintrayUpload
 
 workflows:
   version: 2
