@@ -11,7 +11,7 @@ class ImageApi constructor(
         private val client: OkHttpClient = OkHttpClient()
 ) {
 
-    fun getImage(url: String?): Call {
+    fun getImage(url: String): Call {
         val request = Request.Builder()
                 .url(url)
                 .build()

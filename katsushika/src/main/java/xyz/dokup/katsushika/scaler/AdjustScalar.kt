@@ -2,7 +2,6 @@ package xyz.dokup.katsushika.scaler
 
 import android.graphics.Bitmap
 import android.widget.ImageView
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -21,7 +20,7 @@ class AdjustScalar constructor(
         return suspendCancellableCoroutine { continuation ->
             launch(UI) {
                 val options = async { byteArray.getBitmapOptions() }.await()
-                val bitmap = async { byteArray.getScaledBitmap(target, options) }.await()
+                val bitmap = async { byteArray.getScaledBitmap(target.width, options) }.await()
                 continuation.resume(bitmap)
             }
         }
