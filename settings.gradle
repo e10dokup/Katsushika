@@ -1,1 +1,1 @@
-include ':app', ':katsushika'
+include ':app', ':katsushika', ':sample'

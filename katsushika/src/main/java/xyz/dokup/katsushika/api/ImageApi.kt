@@ -7,9 +7,9 @@ import okhttp3.Request
 /**
  * Created by e10dokup on 2017/08/27.
  */
-class ImageApi {
-
-    private val client = OkHttpClient()
+class ImageApi constructor(
+        private val client: OkHttpClient = OkHttpClient()
+) {
 
     fun getImage(url: String?): Call {
         val request = Request.Builder()

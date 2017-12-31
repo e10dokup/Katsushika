@@ -5,6 +5,7 @@ import android.widget.ImageView
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
+import okhttp3.OkHttpClient
 import xyz.dokup.katsushika.cache.BitmapCache
 import xyz.dokup.katsushika.fetcher.BitmapFetcher
 import xyz.dokup.katsushika.fetcher.OkHttpBitmapFetcher
@@ -20,8 +21,10 @@ class Katsushika private constructor(private val context: Context) {
 
     private var url: String? = null
     private var cache: BitmapCache? = null
-    private var fetcher: BitmapFetcher = OkHttpBitmapFetcher()
+    private var fetcher: BitmapFetcher = OkHttpBitmapFetcher(OkHttpClient())
     private var scalar: BitmapScalar = NopScalar()
+
+    private var errorRes: Int? = null
 
     private val transformers = ArrayList<BitmapTransformer>()
 
@@ -46,6 +49,11 @@ class Katsushika private constructor(private val context: Context) {
         return this
     }
 
+    fun errorRes(resId: Int): Katsushika {
+        this.errorRes = resId
+        return this
+    }
+
     fun transform(transformer: BitmapTransformer): Katsushika {
         this.transformers.add(transformer)
         return this
@@ -55,13 +63,20 @@ class Katsushika private constructor(private val context: Context) {
         url ?: return
 
         launch(UI) {
-            var bitmap = async { fetcher.fetch(url!!, cache, scalar) }.await()
+            try {
+                var bitmap = async { fetcher.fetch(url!!, cache, scalar) }.await()
+                for(transformer in transformers) {
+                    bitmap = async { transformer.transform(bitmap) }.await()
+                }
 
-            for(transformer in transformers) {
-                bitmap = async { transformer.transform(bitmap) }.await()
+                target.setImageBitmap(bitmap)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                errorRes?.let {
+                    target.setImageResource(it)
+                }
             }
 
-            target.setImageBitmap(bitmap)
         }
 
     }

@@ -16,10 +16,15 @@ suspend fun Call.start(): ResponseBody {
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body()
                 if (responseBody == null) {
-                    continuation.resumeWithException(Exception("ResponseBody is null")) } else {
-                    continuation.resume(responseBody) }
+                    continuation.resumeWithException(Exception("ResponseBody is null"))
+                } else {
+                    continuation.resume(responseBody)
+                }
             }
-            override fun onFailure(call: Call, e: IOException) { if (continuation.isCancelled) return
-                continuation.resumeWithException(e) }
-        }) }
+
+            override fun onFailure(call: Call, e: IOException) {
+                return continuation.resumeWithException(e)
+            }
+        })
+    }
 }
